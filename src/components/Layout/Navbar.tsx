@@ -14,6 +14,7 @@ import {
 import { ModeToggle } from "./ModeToggler"
 import { Link } from "react-router"
 
+
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
   { href: "/", label: "Home" },
@@ -21,6 +22,7 @@ const navigationLinks = [
 ]
 
 export default function Navbar() {
+ 
   return (
     <header className="border-b px-4 md:px-6">
       <div className="container mx-auto flex h-16 items-center justify-between gap-4">
@@ -80,9 +82,9 @@ export default function Navbar() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <a href="#" className="w-37 max-md:w-22 text-primary hover:text-primary/90">
+            <Link to="/" className="w-37 max-md:w-22 text-foreground hover:text-primary/90">
               <Logo />
-            </a>
+            </Link>
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
