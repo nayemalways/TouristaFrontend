@@ -1,28 +1,39 @@
-import Logo from "@/assets/icons/Logo"
-import { Button } from "@/components/ui/button"
+import Logo from "@/assets/icons/Logo";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "@/components/ui/navigation-menu"
+} from "@/components/ui/navigation-menu";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { ModeToggle } from "./ModeToggler"
-import { Link } from "react-router"
+} from "@/components/ui/popover";
+import { ModeToggle } from "./ModeToggler";
+import { Link } from "react-router";
+import {
+  useGetMeQuery,
+  useLogoutMutation,
+} from "@/redux/features/auth/auth.api";
 
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
   { href: "/", label: "Home" },
   { href: "about", label: "About" },
-]
+];
 
 export default function Navbar() {
- 
+  const { data } = useGetMeQuery(undefined);
+  const [logout] = useLogoutMutation();
+
+  const handleLogout = async() => {
+    await logout(undefined);
+    window.location.reload();
+  }
+
   return (
     <header className="border-b px-4 md:px-6">
       <div className="container mx-auto flex h-16 items-center justify-between gap-4">
@@ -68,10 +79,7 @@ export default function Navbar() {
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                   {navigationLinks.map((link, index) => (
                     <NavigationMenuItem key={index} className="w-full">
-                      <NavigationMenuLink
-                        asChild
-                        className="py-1.5"
-                      >
+                      <NavigationMenuLink asChild className="py-1.5">
                         <Link to={link.href}>{link.label}</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
@@ -82,7 +90,10 @@ export default function Navbar() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <Link to="/" className="w-37 max-md:w-22 text-foreground hover:text-primary/90">
+            <Link
+              to="/"
+              className="w-37 max-md:w-22 text-foreground hover:text-primary/90"
+            >
               <Logo />
             </Link>
             {/* Navigation menu */}
@@ -94,7 +105,7 @@ export default function Navbar() {
                       asChild
                       className="py-1.5 font-medium text-muted-foreground hover:text-primary"
                     >
-                     <Link to={link.href}>{link.label}</Link>
+                      <Link to={link.href}>{link.label}</Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 ))}
@@ -104,15 +115,29 @@ export default function Navbar() {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
-          <ModeToggle/>
-          <Button asChild variant="ghost" size="sm" className="text-sm">
-            <Link to={'/register'} >Sign In</Link>
-          </Button>
-          <Button asChild size="sm" className="text-sm">
-            <Link to={'/login'}>Login</Link>
-          </Button>
+          <ModeToggle />
+
+          {data?.data?.email ? (
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              className="text-sm cursor-pointer"
+            >
+              {" "}
+              Logout{" "}
+            </Button>
+          ) : (
+            <>
+              <Button asChild variant="ghost" size="sm" className="text-sm">
+                <Link to={"/register"}>Sign In</Link>
+              </Button>
+              <Button asChild size="sm" className="text-sm">
+                <Link to={"/login"}>Login</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>
-  )
+  );
 }
