@@ -28,26 +28,26 @@ import {
 } from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dot } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, type FieldValues } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { z } from "zod";
-
 
 // OTP Schema
 const otpSchema = z.object({
   otp: z.string().length(6, "minumum 6 digit!"),
 });
 
-
-
 // Main component
 const Verify = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const [email] = useState(location.state);
   const [confirm, setConfirm] = useState(false);
+  const [timer, setTimer] = useState(120);
+
   const form = useForm<z.infer<typeof otpSchema>>({
     resolver: zodResolver(otpSchema),
     defaultValues: {
@@ -57,14 +57,14 @@ const Verify = () => {
 
   //  Redux hooks
   const [sendOTP, { isLoading }] = useOtpMutation();
-  const [verifyOTP, {isLoading: verifyLoading}] = useVerifyOTPMutation();
+  const [verifyOTP, { isLoading: verifyLoading }] = useVerifyOTPMutation();
 
   // Foirm submit handler
   const onSubmit = async (values: FieldValues) => {
     try {
       const result = await verifyOTP({ email, otp: values.otp }).unwrap();
       toast.success(result.message);
-      navigate('/login');
+      navigate("/login");
       setConfirm(true);
     } catch (error: any) {
       toast.error(error.data.message);
@@ -75,22 +75,43 @@ const Verify = () => {
   // OTP Send Handler
   const otpSendHandler = async () => {
     try {
+
       await sendOTP({ email }).unwrap();
       toast.success("6 digit OTP sent to your email!");
+      setTimer(120);
       setConfirm(true);
+
     } catch (error) {
       toast.error("OTP sending failed!!");
       console.log(error);
     }
   };
 
-  //! important
-  //   useEffect(() => {
-  //     if (!email) {
-  //       navigate('/');
-  //     }
-  //   }, [email]);
+  // Not email - got to home page
+    useEffect(() => {
+      if (!email) {
+        navigate('/');
+      }
+    }, [email, navigate]);
 
+  // Set Timer
+  useEffect(() => {
+    if (!email || !confirm) return;
+    
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timer, email, confirm]);
+
+  
   return (
     <div className="h-screen w-full flex justify-center items-center">
       {confirm ? (
@@ -137,7 +158,17 @@ const Verify = () => {
                         </InputOTP>
                       </FormControl>
                       <FormDescription>
-                        Please enter the one-time password sent to your email.
+                        Please enter the one-time password sent to your email.{" "}
+                        <br />
+                        {timer === 0 ? (
+                          <div>
+                            {
+                              isLoading ? <Spinner/> : <Button onClick={otpSendHandler} className="-ml-4 cursor-pointer" variant="link" >  Resend OTP </Button>
+                            } 
+                          </div>
+                        ) : (
+                          <span className="text-slate-300">Time left: {timer}</span>
+                        )}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -172,7 +203,7 @@ const Verify = () => {
                 className="cursor-pointer w-full block"
                 type="submit"
               >
-                Submit
+                Send OTP
               </Button>
             )}
           </CardContent>

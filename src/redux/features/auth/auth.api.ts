@@ -35,6 +35,8 @@ const authApi = baseApi.injectEndpoints({
         data: veriyInfo,
       }),
     }),
+
+
   }),
 });
 
@@ -42,5 +44,5 @@ export const {
   useRegisterMutation, 
   useLoginMutation, 
   useOtpMutation,
-   useVerifyOTPMutation 
+   useVerifyOTPMutation
 } = authApi;
