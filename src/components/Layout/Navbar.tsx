@@ -17,6 +17,8 @@ import {
   useGetMeQuery,
   useLogoutMutation,
 } from "@/redux/features/auth/auth.api";
+import { useAppDispatch } from "@/redux/hook";
+import { baseApi } from "@/redux/base.api";
 
 
 // Navigation links array to be used in both desktop and mobile menus
@@ -28,10 +30,11 @@ const navigationLinks = [
 export default function Navbar() {
   const { data } = useGetMeQuery(undefined);
   const [logout] = useLogoutMutation();
+  const dispatch = useAppDispatch();
 
   const handleLogout = async() => {
     await logout(undefined);
-    window.location.reload();
+    dispatch(baseApi.util.resetApiState());
   }
 
   return (
