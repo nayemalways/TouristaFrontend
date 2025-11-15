@@ -2,6 +2,7 @@ import App from "@/App";
 import About from "@/pages/About";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
+import Verify from "@/pages/Verify";
 import { createBrowserRouter } from "react-router";
 
 const router = createBrowserRouter([
@@ -21,7 +22,11 @@ const router = createBrowserRouter([
     },
     {
         Component: Signup,
-        path: '/signup'
+        path: '/register'
+    },
+    {
+        Component: Verify,
+        path: '/verify'
     }
 ]);
 
