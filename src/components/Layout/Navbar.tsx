@@ -19,12 +19,14 @@ import {
 } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
 import { baseApi } from "@/redux/base.api";
-
+import { role } from "@/constants/role";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "/", label: "Home" },
-  { href: "about", label: "About" },
+  { href: "/", label: "Home", role: "PUBLIC" },
+  { href: "about", label: "About", role: "PUBLIC" },
+  { href: "admin", label: "Dashboard", role: role.superadmin },
+  { href: "user", label: "Dashboard", role: role.user },
 ];
 
 export default function Navbar() {
@@ -32,10 +34,10 @@ export default function Navbar() {
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     await logout(undefined);
     dispatch(baseApi.util.resetApiState());
-  }
+  };
 
   return (
     <header className="border-b px-4 md:px-6">
@@ -103,14 +105,28 @@ export default function Navbar() {
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
-                  <NavigationMenuItem key={index}>
-                    <NavigationMenuLink
-                      asChild
-                      className="py-1.5 font-medium text-muted-foreground hover:text-primary"
-                    >
-                      <Link to={link.href}>{link.label}</Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
+                  <>
+                    {link.role === "PUBLIC" && 
+                      <NavigationMenuItem key={index}>
+                        <NavigationMenuLink
+                          asChild
+                          className="py-1.5 font-medium text-muted-foreground hover:text-primary"
+                        >
+                          <Link to={link.href}>{link.label}</Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    }
+                    {link.role === data?.data?.role && 
+                      <NavigationMenuItem key={index}>
+                        <NavigationMenuLink
+                          asChild
+                          className="py-1.5 font-medium text-muted-foreground hover:text-primary"
+                        >
+                          <Link to={link.href}>{link.label}</Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    }
+                  </>
                 ))}
               </NavigationMenuList>
             </NavigationMenu>
@@ -126,8 +142,7 @@ export default function Navbar() {
               variant="outline"
               className="text-sm cursor-pointer"
             >
-              {" "}
-              Logout{" "}
+              Logout
             </Button>
           ) : (
             <>
