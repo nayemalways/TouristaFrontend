@@ -1,4 +1,6 @@
+
 const AddTour = () => {
+
     return (
         <div>
             <h1>Tour Add</h1>
