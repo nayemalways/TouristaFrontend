@@ -24,17 +24,17 @@ export const adminSidebarItems: ISidebarItem[] = [
     url: "#",
     items: [
       {
-        title: "Add Division",
+        title: "Manage Division",
         url: "/admin/add-division",
         component: AddDivision,
       },
       {
-        title: "Add Tour Type",
+        title: "Manage Tour Type",
         url: "/admin/add-tour-type",
         component: AddTourType,
       },
       {
-        title: "Add Tour",
+        title: "Manage Tour",
         url: "/admin/add-tour",
         component: AddTour,
       },

@@ -32,7 +32,7 @@ const AddDivision = () => {
           <ul className="py-4">
             {data &&
               data.map(
-                (item: { _id: string; name: string; thumbnail: string }) => (
+                (item: { _id: string; name: string; description: string; thumbnail?: string }) => (
                   <li key={item._id} className="border-b-2">
                     <div className="flex items-center bg-muted shadow rounded-lg p-3 max-h-[120px]">
                       {/* Image */}
@@ -45,9 +45,12 @@ const AddDivision = () => {
                       </div>
                       {/* Title */}
                       <div className="flex-1 px-4">
-                        <h3 className="text-lg font-medium text-muted-foreground truncate text-center">
+                        <h3 className="text-lg font-medium text-primary truncate text-center">
                           {item.name}
                         </h3>
+                        <p className="text-center text-slate-300 text-sm truncate max-w-62 pt-2 m-auto ">
+                          {item?.description}
+                        </p>
                       </div>
                       {/* Buttons */}
                       <div className="flex gap-2 items-center">
