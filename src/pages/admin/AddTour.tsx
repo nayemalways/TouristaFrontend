@@ -148,7 +148,7 @@ function AddTour() {
                         onValueChange={field.onChange}
                       >
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select a fruit" />
+                          <SelectValue placeholder="Select a Division" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
@@ -184,7 +184,7 @@ function AddTour() {
                         onValueChange={field.onChange}
                       >
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select a Division" />
+                          <SelectValue placeholder="Select a Tour Type" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
@@ -226,7 +226,7 @@ function AddTour() {
                         >
                           {field.value
                             ? field.value.toLocaleDateString()
-                            : "Select date"}
+                            : "Select start date"}
                           <ChevronDownIcon />
                         </Button>
                       </PopoverTrigger>
@@ -269,7 +269,7 @@ function AddTour() {
                         >
                           {field.value
                             ? field.value.toLocaleDateString()
-                            : "Select date"}
+                            : "Select end date"}
                           <ChevronDownIcon />
                         </Button>
                       </PopoverTrigger>
