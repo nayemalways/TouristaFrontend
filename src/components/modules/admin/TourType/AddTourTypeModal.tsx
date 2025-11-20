@@ -21,6 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useAddTourTypeMutation } from "@/redux/features/tour/tour.api";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -65,7 +66,7 @@ export function AddTourModal() {
   return (
     <Dialog  open={isOpen} onOpenChange={setIsOpen} >
       <DialogTrigger asChild>
-        <Button className="cursor-pointer" variant="outline">Add Tour Type</Button>
+        <Button className="cursor-pointer">Add Tour Type <Plus/> </Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[425px]">

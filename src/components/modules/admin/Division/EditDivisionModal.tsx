@@ -23,29 +23,30 @@ import { Input } from "@/components/ui/input";
 import SingleFileUploader from "@/components/ui/SingleFileUploader";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { useAddDivisionMutation } from "@/redux/features/division/division.api";
-import { Plus } from "lucide-react";
-import { useState } from "react";
+import {  useGetDivisionQuery, useUpdateDivisionMutation } from "@/redux/features/division/division.api";
+import { useState, type ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 // Main Component
-export function AddDivisionModal() {
+export function EditDivisionModal({children, id} : {children: ReactElement, id: string}) {
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState<File | null>(null);
 
-  const [addDivision, { isLoading }] = useAddDivisionMutation();
+  const [updateDivision, { isLoading }] = useUpdateDivisionMutation();
+  const { data } = useGetDivisionQuery(undefined);
+
+  const divisionDetails = data.filter((item: {_id: string, name: string}) => item?._id === id)[0];
 
   // Form state
   const form = useForm({
     defaultValues: {
-      name: "",
-      description: "",
+      name: divisionDetails?.name,
+      description: divisionDetails?.description,
     },
   });
 
-  
-
+ 
   // Form Submit Hanlder
   const onSubmit = async (values: any) => {
     try {
@@ -54,7 +55,7 @@ export function AddDivisionModal() {
       formdata.append("data", JSON.stringify(values));
       formdata.append("file", image as File);
 
-      const result = await addDivision(formdata);
+      const result = await updateDivision({formdata, divisionId: id});
 
       if (result?.data?.success) {
         toast.success(result.data.message);
@@ -77,19 +78,21 @@ export function AddDivisionModal() {
     }
   };
 
+  
   return (
     <div  >
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <div className="flex justify-between items-center my-8 ">
-          <h1 className="text-xl font-semibold">Division</h1>
+        <div className="my-8 ">
           <DialogTrigger asChild>
-            <Button className="cursor-pointer">Add Division <Plus/> </Button>
+           {
+            children
+           }
           </DialogTrigger>
         </div>
 
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Add Division</DialogTitle>
+            <DialogTitle>Edit Division</DialogTitle>
             <DialogDescription>
               Provide a name and add a Divison.
             </DialogDescription>
@@ -125,7 +128,7 @@ export function AddDivisionModal() {
                   </FormItem>
                 )}
               />
-              <SingleFileUploader onChange={setImage} />
+              <SingleFileUploader defaultImage={divisionDetails?.thumbnail} onChange={setImage} />
 
               <DialogFooter>
                 <DialogClose asChild>
@@ -142,7 +145,7 @@ export function AddDivisionModal() {
                   <Spinner />
                 ) : (
                   <Button className="cursor-pointer" type="submit">
-                    Add
+                    Save changes
                   </Button>
                 )}
               </DialogFooter>
