@@ -10,7 +10,7 @@ import { Edit2, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 
 const AddDivision = () => {
-  const { data } = useGetDivisionQuery(undefined);
+  const { data, isLoading } = useGetDivisionQuery(undefined);
   const [deleteDivision, { isLoading: divisonDeleteLoading }] =
     useDeleteDivisionMutation();
 
@@ -27,52 +27,75 @@ const AddDivision = () => {
   return (
     <div className="w-full h-screen max-w-3xl m-auto">
       <AddDivisionModal />
-      <div className="border border-muted rounded-md">
+      <div className="rounded-md">
         <div className="rounded-md w-full h-screen">
           <ul className="py-4">
-            {data &&
-              data.map(
-                (item: { _id: string; name: string; description: string; thumbnail?: string }) => (
-                  <li key={item._id} className="border-b-2">
-                    <div className="flex items-center bg-muted shadow rounded-lg p-3 max-h-[120px]">
-                      {/* Image */}
-                      <div className="w-24 h-24 shrink-0 overflow-hidden rounded-md bg-gray-100">
-                        <img
-                          src={item.thumbnail}
-                          alt="Preview"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      {/* Title */}
-                      <div className="flex-1 px-4">
-                        <h3 className="text-lg font-medium text-primary truncate text-center">
-                          {item.name}
-                        </h3>
-                        <p className="text-center text-slate-300 text-sm truncate max-w-62 pt-2 m-auto ">
-                          {item?.description}
-                        </p>
-                      </div>
-                      {/* Buttons */}
-                      <div className="flex gap-2 items-center">
-                        <EditDivisionModal id={item._id}>
-                          <Button className="px-3 py-1  text-sm text-white rounded cursor-pointer">
-                            <Edit2 />
-                          </Button>
-                        </EditDivisionModal>
-                        <DeleteConfirmation
-                          loading={divisonDeleteLoading}
-                          onConfirm={() => handleDelete(item?._id)}
-                        >
-                          <Button className="px-3 py-1 text-sm text-white rounded cursor-pointer">
-                            <Trash2Icon />
-                          </Button>
-                        </DeleteConfirmation>
-                      </div>
-                    </div>
-                  </li>
-                )
-              )}
-          </ul>
+  {isLoading
+    ? Array.from({ length: 7 }).map((_, i) => (
+        <li key={i} className="border-b-2">
+          <div className="flex items-center bg-muted shadow rounded-lg p-3 max-h-[120px] animate-pulse">
+            {/* Image */}
+            <div className="w-24 h-24 shrink-0 overflow-hidden rounded-md bg-gray-200" />
+
+            {/* Title & Description */}
+            <div className="flex-1 px-4 space-y-2">
+              <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto" /> {/* title */}
+              <div className="h-4 bg-gray-200 rounded w-5/6 mx-auto" /> {/* description line 1 */}
+              <div className="h-4 bg-gray-200 rounded w-4/6 mx-auto" /> {/* description line 2 */}
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-2 items-center">
+              <div className="w-12 h-8 bg-gray-300 rounded" /> {/* edit button */}
+              <div className="w-12 h-8 bg-gray-300 rounded" /> {/* delete button */}
+            </div>
+          </div>
+        </li>
+      ))
+    : data &&
+      data.map(
+        (item: { _id: string; name: string; description: string; thumbnail?: string }) => (
+          <li key={item._id} className="border-b-2">
+            <div className="flex items-center bg-muted shadow rounded-lg p-3 max-h-[120px]">
+              {/* Image */}
+              <div className="w-24 h-24 shrink-0 overflow-hidden rounded-md bg-gray-100">
+                <img
+                  src={item.thumbnail}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {/* Title */}
+              <div className="flex-1 px-4">
+                <h3 className="text-lg font-medium text-primary truncate text-center">
+                  {item.name}
+                </h3>
+                <p className="text-center text-slate-300 text-sm truncate max-w-62 pt-2 m-auto ">
+                  {item.description}
+                </p>
+              </div>
+              {/* Buttons */}
+              <div className="flex gap-2 items-center">
+                <EditDivisionModal id={item._id}>
+                  <Button className="px-3 py-1 text-sm text-white rounded cursor-pointer">
+                    <Edit2 />
+                  </Button>
+                </EditDivisionModal>
+                <DeleteConfirmation
+                  loading={divisonDeleteLoading}
+                  onConfirm={() => handleDelete(item._id)}
+                >
+                  <Button className="px-3 py-1 text-sm text-white rounded cursor-pointer">
+                    <Trash2Icon />
+                  </Button>
+                </DeleteConfirmation>
+              </div>
+            </div>
+          </li>
+        )
+      )}
+</ul>
+
         </div>
       </div>
     </div>
