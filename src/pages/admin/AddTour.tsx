@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm, type FieldValues } from "react-hook-form";
-import { string, z } from "zod";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -34,18 +34,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, Plus, Trash } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import { formatISO } from "date-fns";
 import MultipleImageUploader from "@/components/ui/MultipleImageUploader";
 import type { FileMetadata } from "@/hooks/use-file-upload";
 import { Spinner } from "@/components/ui/spinner";
+import { formSchema } from "@/zodSchema/tour.schema";
 import { toast } from "sonner";
-import  { formSchema } from "@/zodSchema/tour.schema";
-
- 
-
 
 // Main Components
 function AddTour() {
@@ -63,14 +60,16 @@ function AddTour() {
       tourType: "",
       startDate: undefined,
       endDate: undefined,
-      included: [{ value: "" }]
+      included: [{ value: "" }],
     },
   });
 
-  const {fields, append, remove} = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "included"
+    name: "included",
   });
+
+  // console.log(fields);
 
   const { data: divisionData } = useGetDivisionQuery(undefined);
   const { data: tourTypeData } = useGetTourTypeQuery(undefined);
@@ -82,6 +81,7 @@ function AddTour() {
       ...values,
       startDate: formatISO(values.startDate),
       endDate: formatISO(values.endDate),
+      included: values?.included.map((item: { value: string }) => item.value),
     };
 
     const formdata = new FormData();
@@ -93,10 +93,18 @@ function AddTour() {
 
       if (res.success) {
         toast.success(res.message);
+
+        // Clear form
+        form.reset();
+        setImages([]);
         return;
       }
     } catch (error) {
       console.log(error);
+
+      // Clear form
+      form.reset();
+      setImages([]);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       toast.error((error as any)?.data?.message);
     }
@@ -313,8 +321,50 @@ function AddTour() {
 
             {/* Multiple Image uploader  */}
             <div>
-              <MultipleImageUploader onChange={setImages} />
+              <MultipleImageUploader value={images} onChange={setImages} />
             </div>
+
+            <div className="border-t border-slate-700 w-full"></div>
+            <div className="flex justify-between">
+              <p className="">Included</p>
+              <Button
+                type="button"
+                size="icon"
+                onClick={() => append({ value: "" })}
+                className="cursor-pointer"
+              >
+                <Plus/>
+              </Button>
+            </div>
+            <br />
+            {fields.map((item, index) => (
+              <div className="flex justify-between gap-2">
+                <FormField
+                  control={form.control}
+                  name={`included.${index}.value`}
+                  key={item.id}
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      {/* <FormLabel>{index + 1}</FormLabel> */}
+                      <FormControl>
+                        <Input placeholder="eg. Free WiFi" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  onClick={() => remove(index)}
+                  type="button"
+                  variant="link"
+                  size="icon"
+                  className="cursor-pointer"
+                >
+                  <Trash />
+                </Button>
+              </div>
+            ))}
 
             {isLoading ? (
               <Spinner />

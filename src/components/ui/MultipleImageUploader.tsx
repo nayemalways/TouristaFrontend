@@ -6,7 +6,7 @@ import { useEffect, type Dispatch } from "react"
 
 
 
-export default function MultipleImageUploader({onChange} : {onChange:  Dispatch<React.SetStateAction<[] | (File | FileMetadata)[]>>}) {
+export default function MultipleImageUploader({onChange, value} : {onChange:  Dispatch<React.SetStateAction<[] | (File | FileMetadata)[]>>, value: (File | FileMetadata)[]}) {
   const maxSizeMB = 5
   const maxSize = maxSizeMB * 1024 * 1024 // 5MB default
   const maxFiles = 6
@@ -37,6 +37,16 @@ export default function MultipleImageUploader({onChange} : {onChange:  Dispatch<
       onChange([]);
     }
   }, [files, onChange])
+
+
+  // Clear Image after submit
+  // reset internal files if parent clears images
+  useEffect(() => {
+  if (value.length === 0 && files.length > 0) {
+    files.forEach(f => removeFile(f.id));
+  }
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [value]);
 
   return (
     <div className="flex flex-col gap-2">
