@@ -26,17 +26,9 @@ import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { baseURL } from "@/config/config";
+import { loginSchema } from "@/zodSchema/auth.schema";
 
-// Login Zod Schema
-const loginSchema = z.object({
-  email: z.email(),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 length" })
-    .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/, {
-      message: "Password must be 1 uppercase, special, 1 number!",
-    }),
-});
+
 
 // Main Function
 export function LoginForm() {

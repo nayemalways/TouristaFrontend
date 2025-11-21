@@ -1,8 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, type FieldValues } from "react-hook-form";
-import { z } from "zod";
+import { useFieldArray, useForm, type FieldValues } from "react-hook-form";
+import { string, z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -42,25 +42,12 @@ import MultipleImageUploader from "@/components/ui/MultipleImageUploader";
 import type { FileMetadata } from "@/hooks/use-file-upload";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
+import  { formSchema } from "@/zodSchema/tour.schema";
 
-// Form Zod Schema
-const formSchema = z.object({
-  title: z.string().min(2, {
-    message: "Title must be at least  characters.",
-  }),
-  description: z.string().min(2, {
-    message: "Description must be at least  characters.",
-  }),
-  division: z.string().min(24, {
-    message: "Please select a division",
-  }),
-  tourType: z.string().min(24, {
-    message: "Please select a Tour Type",
-  }),
-  startDate: z.date({ message: "Start date required" }),
-  endDate: z.date({ message: "End date required" }),
-});
+ 
 
+
+// Main Components
 function AddTour() {
   const [startOpen, setStartOpen] = useState(false);
   const [endOpen, setEndOpen] = useState(false);
@@ -76,7 +63,13 @@ function AddTour() {
       tourType: "",
       startDate: undefined,
       endDate: undefined,
+      included: [{ value: "" }]
     },
+  });
+
+  const {fields, append, remove} = useFieldArray({
+    control: form.control,
+    name: "included"
   });
 
   const { data: divisionData } = useGetDivisionQuery(undefined);
