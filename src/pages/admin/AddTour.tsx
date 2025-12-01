@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm, type FieldValues } from "react-hook-form";
+import { useForm, type FieldValues } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,7 @@ import type { FileMetadata } from "@/hooks/use-file-upload";
 import { Spinner } from "@/components/ui/spinner";
 import { formSchema } from "@/zodSchema/tour.schema";
 import { toast } from "sonner";
+import { useDynamicInputField } from "@/hooks/useDynamicInputField";
 
 // Main Components
 function AddTour() {
@@ -63,16 +64,35 @@ function AddTour() {
       startDate: undefined,
       endDate: undefined,
       included: [{ value: "" }],
+      excluded: [{ value: "" }],
+      tourPlan: [{ value: "" }],
+      amenities: [{ value: "" }],
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "included",
-  });
+  // Dynamic input field
+  const {
+    fields: includedFields,
+    append: includedAppend,
+    remove: includedRemove,
+  } = useDynamicInputField(form.control, "included");
+  const {
+    fields: excludedFields,
+    append: excludedAppend,
+    remove: excludedRemove,
+  } = useDynamicInputField(form.control, "excluded");
+  const {
+    fields: tourPlanFields,
+    append: tourPlanAppend,
+    remove: tourPlanRemove,
+  } = useDynamicInputField(form.control, "tourPlan");
+  const {
+    fields: amenitiesFields,
+    append: amenitiesAppend,
+    remove: amenitiesRemove,
+  } = useDynamicInputField(form.control, "amenities");
 
-  // console.log(fields);
-
+  // Redux query
   const { data: divisionData } = useGetDivisionQuery(undefined);
   const { data: tourTypeData } = useGetTourTypeQuery(undefined);
   const [addTour, { isLoading }] = useAddTourMutation();
@@ -86,7 +106,12 @@ function AddTour() {
       costFrom: Number(values.costFrom),
       endDate: formatISO(values.endDate),
       included: values?.included.map((item: { value: string }) => item.value),
+      excluded: values?.excluded.map((item: { value: string }) => item.value),
+      tourPlan: values?.excluded.map((item: { value: string }) => item.value),
+      amenities: values?.excluded.map((item: { value: string }) => item.value),
     };
+
+    console.log(tourPayload);
 
     const formdata = new FormData();
     formdata.append("data", JSON.stringify(tourPayload));
@@ -117,7 +142,7 @@ function AddTour() {
   return (
     <div className="w-full max-w-5xl m-auto h-auto min-h-screen flex flex-col justify-center items-center ">
       <div>
-        <h3 className="text-3xl  text-center text-primary font-bold">
+        <h3 className="text-3xl  text-center text-primary font-bold mb-4">
           Add Tour
         </h3>
       </div>
@@ -314,10 +339,7 @@ function AddTour() {
                     <FormItem>
                       <FormLabel>Cost From</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="eg. 7000 TK"
-                          {...field}
-                        />
+                        <Input placeholder="eg. 7000 TK" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -333,10 +355,7 @@ function AddTour() {
                     <FormItem>
                       <FormLabel>Minumum Age </FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="eg. 16"
-                          {...field}
-                        />
+                        <Input placeholder="eg. 16" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -369,48 +388,187 @@ function AddTour() {
               <MultipleImageUploader value={images} onChange={setImages} />
             </div>
 
-            {/* Multifield Input */}
-            <div className="border-t border-slate-700 w-full"></div>
-            <div className="flex justify-between">
-              <p className="">Included</p>
-              <Button
-                type="button"
-                size="icon"
-                onClick={() => append({ value: "" })}
-                className="cursor-pointer bg-muted-foreground "
-              >
-                <Plus />
-              </Button>
-            </div>
-
-            {fields.map((item, index) => (
-              <div className="flex justify-between gap-2 -mt-4 ">
-                <FormField
-                  control={form.control}
-                  name={`included.${index}.value`}
-                  key={item.id}
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      {/* <FormLabel>{index + 1}</FormLabel> */}
-                      <FormControl>
-                        <Input placeholder="eg. Free WiFi" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
+            {/* ---------------------------Multifield Input Part---------------------------------- */}
+            <div className="flex flex-col gap-4">
+              <h3>Others</h3>
+              {/* Multifield Input -Included */}
+              <div className="border-t border-slate-700 w-full"></div>
+              <div className="flex justify-between">
+                <p className="">Included</p>
                 <Button
-                  onClick={() => remove(index)}
                   type="button"
-                  variant="link"
                   size="icon"
-                  className="cursor-pointer "
+                  onClick={() => includedAppend({ value: "" })}
+                  className="cursor-pointer bg-muted-foreground "
                 >
-                  <Trash />
+                  <Plus />
                 </Button>
               </div>
-            ))}
+
+              {includedFields.map((item, index) => (
+                <div key={index} className="flex justify-between gap-2   ">
+                  <FormField
+                    control={form.control}
+                    name={`included.${index}.value`}
+                    key={item.id}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        {/* <FormLabel>{index + 1}</FormLabel> */}
+                        <FormControl>
+                          <Input placeholder="eg. Free WiFi" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button
+                    onClick={() => includedRemove(index)}
+                    type="button"
+                    variant="link"
+                    size="icon"
+                    className="cursor-pointer "
+                  >
+                    <Trash />
+                  </Button>
+                </div>
+              ))}
+
+              {/* Multifield Input -Exluded */}
+              <div className="border-t border-slate-700 w-full"></div>
+              <div className="flex justify-between">
+                <p className="">Exluded</p>
+                <Button
+                  type="button"
+                  size="icon"
+                  onClick={() => excludedAppend({ value: "" })}
+                  className="cursor-pointer bg-muted-foreground "
+                >
+                  <Plus />
+                </Button>
+              </div>
+
+              {excludedFields.map((item, index) => (
+                <div key={index} className="flex justify-between gap-2 mt-1 ">
+                  <FormField
+                    control={form.control}
+                    name={`excluded.${index}.value`}
+                    key={item.id}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        {/* <FormLabel>{index + 1}</FormLabel> */}
+                        <FormControl>
+                          <Input placeholder="eg. Subsidize meal" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button
+                    onClick={() => excludedRemove(index)}
+                    type="button"
+                    variant="link"
+                    size="icon"
+                    className="cursor-pointer "
+                  >
+                    <Trash />
+                  </Button>
+                </div>
+              ))}
+
+              {/* Multifield Input - Add tour plan */}
+              <div className="border-t border-slate-700 w-full"></div>
+              <div className="flex justify-between">
+                <p className="">Add Tour plan</p>
+                <Button
+                  type="button"
+                  size="icon"
+                  onClick={() => tourPlanAppend({ value: "" })}
+                  className="cursor-pointer bg-muted-foreground "
+                >
+                  <Plus />
+                </Button>
+              </div>
+
+              {tourPlanFields.map((item, index) => (
+                <div key={index} className="flex justify-between gap-2 mt-1 ">
+                  <FormField
+                    control={form.control}
+                    name={`tourPlan.${index}.value`}
+                    key={item.id}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        {/* <FormLabel>{index + 1}</FormLabel> */}
+                        <FormControl>
+                          <Input
+                            placeholder="eg. Day-1: Hiking on the heal!"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button
+                    onClick={() => tourPlanRemove(index)}
+                    type="button"
+                    variant="link"
+                    size="icon"
+                    className="cursor-pointer "
+                  >
+                    <Trash />
+                  </Button>
+                </div>
+              ))}
+
+              {/* Multifield Input - Add tour plan */}
+              <div className="border-t border-slate-700 w-full"></div>
+              <div className="flex justify-between">
+                <p className="">Amenities</p>
+                <Button
+                  type="button"
+                  size="icon"
+                  onClick={() => amenitiesAppend({ value: "" })}
+                  className="cursor-pointer bg-muted-foreground "
+                >
+                  <Plus />
+                </Button>
+              </div>
+
+              {amenitiesFields.map((item, index) => (
+                <div key={index} className="flex justify-between gap-2 mt-1 ">
+                  <FormField
+                    control={form.control}
+                    name={`amenities.${index}.value`}
+                    key={item.id}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        {/* <FormLabel>{index + 1}</FormLabel> */}
+                        <FormControl>
+                          <Input
+                            placeholder="eg. Air conditions Hotel room"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button
+                    onClick={() => amenitiesRemove(index)}
+                    type="button"
+                    variant="link"
+                    size="icon"
+                    className="cursor-pointer "
+                  >
+                    <Trash />
+                  </Button>
+                </div>
+              ))}
+            </div>
 
             {isLoading ? (
               <Spinner />

@@ -22,5 +22,20 @@ export const formSchema = z.object({
     z.object({
       value: z.string().min(1, "Please include something or remove this filed!")
     })
-  )
+  ),
+  excluded: z.array(
+    z.object({
+      value: z.string().min(1, "Please include something or remove this filed!")
+    })
+  ),
+  tourPlan: z.array(
+    z.object({
+      value: z.string().min(1, "Please include something or remove this filed!")
+    })
+  ),
+  amenities: z.array(
+    z.object({
+      value: z.string().min(1, "Please include something or remove this filed!")
+    })
+  ),
 });
