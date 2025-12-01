@@ -331,14 +331,14 @@ function AddTour() {
                 type="button"
                 size="icon"
                 onClick={() => append({ value: "" })}
-                className="cursor-pointer"
+                className="cursor-pointer bg-muted-foreground "
               >
                 <Plus/>
               </Button>
             </div>
-            <br />
+
             {fields.map((item, index) => (
-              <div className="flex justify-between gap-2">
+              <div className="flex justify-between gap-2 -mt-4 ">
                 <FormField
                   control={form.control}
                   name={`included.${index}.value`}
@@ -359,7 +359,7 @@ function AddTour() {
                   type="button"
                   variant="link"
                   size="icon"
-                  className="cursor-pointer"
+                  className="cursor-pointer "
                 >
                   <Trash />
                 </Button>

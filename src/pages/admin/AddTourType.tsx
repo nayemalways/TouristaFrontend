@@ -46,7 +46,7 @@ const AddTourType = () => {
               <TableHead className="text-center w-full">
                 Tour Type Name
               </TableHead>
-              <TableHead className="text-right w-full">Amount</TableHead>
+              <TableHead className="text-right w-full">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
