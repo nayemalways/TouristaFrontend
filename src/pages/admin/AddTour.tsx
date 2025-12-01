@@ -58,6 +58,8 @@ function AddTour() {
       description: "",
       division: "",
       tourType: "",
+      minAge: "",
+      costFrom: "",
       startDate: undefined,
       endDate: undefined,
       included: [{ value: "" }],
@@ -80,6 +82,8 @@ function AddTour() {
     const tourPayload = {
       ...values,
       startDate: formatISO(values.startDate),
+      minAge: Number(values.minAge),
+      costFrom: Number(values.costFrom),
       endDate: formatISO(values.endDate),
       included: values?.included.map((item: { value: string }) => item.value),
     };
@@ -223,7 +227,7 @@ function AddTour() {
                         <Button
                           type="button"
                           variant="outline"
-                          className="w-full justify-between"
+                          className="w-full justify-between text-muted-foreground"
                         >
                           {field.value
                             ? field.value.toLocaleDateString()
@@ -266,7 +270,7 @@ function AddTour() {
                         <Button
                           type="button"
                           variant="outline"
-                          className="w-full justify-between"
+                          className="w-full justify-between text-muted-foreground "
                         >
                           {field.value
                             ? field.value.toLocaleDateString()
@@ -300,6 +304,47 @@ function AddTour() {
               </div>
             </div>
 
+            {/* Cost and Age Limit  */}
+            <div className="flex justify-between gap-5">
+              <div className="flex flex-col gap-3 flex-1">
+                <FormField
+                  control={form.control}
+                  name="costFrom"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cost From</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="eg. 7000 TK"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="flex flex-col gap-3 flex-1">
+                <FormField
+                  control={form.control}
+                  name="minAge"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Minumum Age </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="eg. 16"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
             {/* Description  */}
             <FormField
               control={form.control}
@@ -324,6 +369,7 @@ function AddTour() {
               <MultipleImageUploader value={images} onChange={setImages} />
             </div>
 
+            {/* Multifield Input */}
             <div className="border-t border-slate-700 w-full"></div>
             <div className="flex justify-between">
               <p className="">Included</p>
@@ -333,7 +379,7 @@ function AddTour() {
                 onClick={() => append({ value: "" })}
                 className="cursor-pointer bg-muted-foreground "
               >
-                <Plus/>
+                <Plus />
               </Button>
             </div>
 

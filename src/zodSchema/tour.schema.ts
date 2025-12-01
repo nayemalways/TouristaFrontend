@@ -16,6 +16,8 @@ export const formSchema = z.object({
   }),
   startDate: z.date({ message: "Start date required" }),
   endDate: z.date({ message: "End date required" }),
+  minAge: z.string({ message: "Age must be number type!" }),
+  costFrom: z.string({ message: "Cost must be number type!" }),
   included: z.array(
     z.object({
       value: z.string().min(1, "Please include something or remove this filed!")
