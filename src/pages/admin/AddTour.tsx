@@ -140,434 +140,470 @@ function AddTour() {
   };
 
   return (
-    <div className="w-full max-w-5xl m-auto h-auto min-h-screen flex flex-col justify-center items-center ">
+    <div className="w-full max-w-7xl m-auto h-auto min-h-screen flex flex-col justify-center items-center ">
       <div>
         <h3 className="text-3xl  text-center text-primary font-bold mb-4">
           Add Tour
         </h3>
       </div>
-      <div className="w-full max-w-xl m-auto bg-muted px-6 py-8 rounded-md">
+      <div className="w-full m-auto bg-muted px-6 py-8 rounded-md">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="eg. Cox's bazar sea beach camping"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex justify-between gap-5">
+            {/* Part-1  */}
+            <div className="flex w-full gap-3">
               <FormField
                 control={form.control}
-                name="division"
+                name="title"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Division</FormLabel>
+                    <FormLabel>Title</FormLabel>
                     <FormControl>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select a Division" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Fruits</SelectLabel>
-                            {divisionData &&
-                              divisionData.map(
-                                (
-                                  item: { _id: string; name: string },
-                                  i: number
-                                ) => (
-                                  <SelectItem key={i} value={item?._id}>
-                                    {item?.name}
-                                  </SelectItem>
-                                )
-                              )}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
+                      <Input
+                        placeholder="eg. Cox's bazar sea beach camping"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              <div className="flex justify-between gap-3 flex-1">
+                <FormField
+                  control={form.control}
+                  name="division"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Division</FormLabel>
+                      <FormControl>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select a Division" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Fruits</SelectLabel>
+                              {divisionData &&
+                                divisionData.map(
+                                  (
+                                    item: { _id: string; name: string },
+                                    i: number
+                                  ) => (
+                                    <SelectItem key={i} value={item?._id}>
+                                      {item?.name}
+                                    </SelectItem>
+                                  )
+                                )}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="tourType"
+                  render={({ field }) => (
+                    <FormItem className="flex-1 w-full">
+                      <FormLabel>Tour Types</FormLabel>
+                      <FormControl>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select a Tour Type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Fruits</SelectLabel>
+                              {tourTypeData &&
+                                tourTypeData.map(
+                                  (
+                                    item: { _id: string; name: string },
+                                    i: number
+                                  ) => (
+                                    <SelectItem key={i} value={item?._id}>
+                                      {item?.name}
+                                    </SelectItem>
+                                  )
+                                )}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Part-2  */}
+            <div className="flex justify-center items-center gap-3">
+              {/* Calender  */}
+              <div className="flex justify-between gap-3 flex-1">
+                <div className="flex flex-col gap-3 flex-1">
+                  <FormField
+                    control={form.control}
+                    name="startDate"
+                    render={({ field }) => (
+                      <Popover open={startOpen} onOpenChange={setStartOpen}>
+                        <FormLabel>Start Date</FormLabel>
+                        <PopoverTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="w-full justify-between text-muted-foreground"
+                          >
+                            {field.value
+                              ? field.value.toLocaleDateString()
+                              : "Select date"}
+                            <ChevronDownIcon />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="w-auto overflow-hidden p-0"
+                          align="start"
+                        >
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={(date) => {
+                              field.onChange(date);
+                              setStartOpen(false);
+                            }}
+                            //   Enable toaday's date also
+                            disabled={(date) =>
+                              date <
+                              new Date(
+                                new Date().setDate(new Date().getDate() - 1)
+                              )
+                            }
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    )}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-3 flex-1">
+                  <FormField
+                    control={form.control}
+                    name="endDate"
+                    render={({ field }) => (
+                      <Popover open={endOpen} onOpenChange={setEndOpen}>
+                        <FormLabel>End Date</FormLabel>
+                        <PopoverTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="w-full justify-between text-muted-foreground "
+                          >
+                            {field.value
+                              ? field.value.toLocaleDateString()
+                              : "Select a date"}
+                            <ChevronDownIcon />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="w-auto overflow-hidden p-0"
+                          align="start"
+                        >
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={(date) => {
+                              field.onChange(date);
+                              setEndOpen(false);
+                            }}
+                            //   Enable toaday's date also
+                            disabled={(date) =>
+                              date <
+                              new Date(
+                                new Date().setDate(new Date().getDate() - 1)
+                              )
+                            }
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* Cost and Age Limit  */}
+              <div className="flex justify-between gap-3 flex-1">
+                <div className="flex flex-col gap-3 flex-1">
+                  <FormField
+                    control={form.control}
+                    name="costFrom"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Cost From</FormLabel>
+                        <FormControl>
+                          <Input placeholder="eg. 7000 TK" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-3 flex-1">
+                  <FormField
+                    control={form.control}
+                    name="minAge"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Minumum Age </FormLabel>
+                        <FormControl>
+                          <Input placeholder="eg. 16" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Part-3  */}
+            <div className="flex justify-center items-center gap-3">
+              {/* Description  */}
               <FormField
                 control={form.control}
-                name="tourType"
+                name="description"
                 render={({ field }) => (
-                  <FormItem className="flex-1 w-full">
-                    <FormLabel>Tour Types</FormLabel>
+                  <FormItem className="flex-1">
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select a Tour Type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Fruits</SelectLabel>
-                            {tourTypeData &&
-                              tourTypeData.map(
-                                (
-                                  item: { _id: string; name: string },
-                                  i: number
-                                ) => (
-                                  <SelectItem key={i} value={item?._id}>
-                                    {item?.name}
-                                  </SelectItem>
-                                )
-                              )}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
+                      <Textarea
+                        className="h-52"
+                        placeholder="Enter tour details"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
 
-            {/* Calender  */}
-            <div className="flex justify-between gap-5">
-              <div className="flex flex-col gap-3 flex-1">
-                <FormField
-                  control={form.control}
-                  name="startDate"
-                  render={({ field }) => (
-                    <Popover open={startOpen} onOpenChange={setStartOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-full justify-between text-muted-foreground"
-                        >
-                          {field.value
-                            ? field.value.toLocaleDateString()
-                            : "Select start date"}
-                          <ChevronDownIcon />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-auto overflow-hidden p-0"
-                        align="start"
-                      >
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={(date) => {
-                            field.onChange(date);
-                            setStartOpen(false);
-                          }}
-                          //   Enable toaday's date also
-                          disabled={(date) =>
-                            date <
-                            new Date(
-                              new Date().setDate(new Date().getDate() - 1)
-                            )
-                          }
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  )}
-                />
-              </div>
-
-              <div className="flex flex-col gap-3 flex-1">
-                <FormField
-                  control={form.control}
-                  name="endDate"
-                  render={({ field }) => (
-                    <Popover open={endOpen} onOpenChange={setEndOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-full justify-between text-muted-foreground "
-                        >
-                          {field.value
-                            ? field.value.toLocaleDateString()
-                            : "Select end date"}
-                          <ChevronDownIcon />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-auto overflow-hidden p-0"
-                        align="start"
-                      >
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={(date) => {
-                            field.onChange(date);
-                            setEndOpen(false);
-                          }}
-                          //   Enable toaday's date also
-                          disabled={(date) =>
-                            date <
-                            new Date(
-                              new Date().setDate(new Date().getDate() - 1)
-                            )
-                          }
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  )}
-                />
+              {/* Multiple Image uploader  */}
+              <div className="flex-1">
+                <h2 className="mb-2 text-[14px] font-semibold">
+                  Upload Images
+                </h2>
+                <MultipleImageUploader value={images} onChange={setImages} />
               </div>
             </div>
 
-            {/* Cost and Age Limit  */}
-            <div className="flex justify-between gap-5">
-              <div className="flex flex-col gap-3 flex-1">
-                <FormField
-                  control={form.control}
-                  name="costFrom"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Cost From</FormLabel>
-                      <FormControl>
-                        <Input placeholder="eg. 7000 TK" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="flex flex-col gap-3 flex-1">
-                <FormField
-                  control={form.control}
-                  name="minAge"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Minumum Age </FormLabel>
-                      <FormControl>
-                        <Input placeholder="eg. 16" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            {/* Description  */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      className="h-43"
-                      placeholder="Enter tour details"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Multiple Image uploader  */}
-            <div>
-              <MultipleImageUploader value={images} onChange={setImages} />
-            </div>
-
-            {/* ---------------------------Multifield Input Part---------------------------------- */}
+            {/* ---------------------------Multifield Input Part-4---------------------------------- */}
             <div className="flex flex-col gap-4">
               <h3>Others</h3>
-              {/* Multifield Input -Included */}
               <div className="border-t border-slate-700 w-full"></div>
-              <div className="flex justify-between">
-                <p className="">Included</p>
-                <Button
-                  type="button"
-                  size="icon"
-                  onClick={() => includedAppend({ value: "" })}
-                  className="cursor-pointer bg-muted-foreground "
-                >
-                  <Plus />
-                </Button>
+
+              <div className="flex gap-5">
+                {/* Multifield Input -Included */}
+                <div className="w-full pr-3 border-r-2">
+                  <div className="flex justify-between">
+                    <p className="">Included</p>
+                    <Button
+                      type="button"
+                      size="icon"
+                      onClick={() => includedAppend({ value: "" })}
+                      className="cursor-pointer bg-muted-foreground "
+                    >
+                      <Plus />
+                    </Button>
+                  </div>
+
+                  {includedFields.map((item, index) => (
+                    <div key={index} className="flex justify-between gap-2   ">
+                      <FormField
+                        control={form.control}
+                        name={`included.${index}.value`}
+                        key={item.id}
+                        render={({ field }) => (
+                          <FormItem className="w-full mt-2">
+                            {/* <FormLabel>{index + 1}</FormLabel> */}
+                            <FormControl>
+                              <Input placeholder="eg. Free WiFi" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button
+                        onClick={() => includedRemove(index)}
+                        type="button"
+                        variant="link"
+                        size="icon"
+                        className="cursor-pointer "
+                      >
+                        <Trash />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="w-full">
+                  {/* Multifield Input -Exluded */}
+                  <div className="flex justify-between flex-1">
+                    <p className="">Exluded</p>
+                    <Button
+                      type="button"
+                      size="icon"
+                      onClick={() => excludedAppend({ value: "" })}
+                      className="cursor-pointer bg-muted-foreground "
+                    >
+                      <Plus />
+                    </Button>
+                  </div>
+
+                  {excludedFields.map((item, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between gap-2 mt-1 "
+                    >
+                      <FormField
+                        control={form.control}
+                        name={`excluded.${index}.value`}
+                        key={item.id}
+                        render={({ field }) => (
+                          <FormItem className="w-full mt-1">
+                            {/* <FormLabel>{index + 1}</FormLabel> */}
+                            <FormControl>
+                              <Input
+                                placeholder="eg. Subsidize meal"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button
+                        onClick={() => excludedRemove(index)}
+                        type="button"
+                        variant="link"
+                        size="icon"
+                        className="cursor-pointer "
+                      >
+                        <Trash />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {includedFields.map((item, index) => (
-                <div key={index} className="flex justify-between gap-2   ">
-                  <FormField
-                    control={form.control}
-                    name={`included.${index}.value`}
-                    key={item.id}
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        {/* <FormLabel>{index + 1}</FormLabel> */}
-                        <FormControl>
-                          <Input placeholder="eg. Free WiFi" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+              {/* Grouped Layout for Tour Plan & Amenities (same as Included/Excluded) */}
+              <div className="flex gap-5">
+                {/* Multifield Input - Tour Plan */}
+                <div className="w-full pr-3 border-r-2">
+                  <div className="flex justify-between">
+                    <p className="">Tour Plan</p>
+                    <Button
+                      type="button"
+                      size="icon"
+                      onClick={() => tourPlanAppend({ value: "" })}
+                      className="cursor-pointer bg-muted-foreground"
+                    >
+                      <Plus />
+                    </Button>
+                  </div>
 
-                  <Button
-                    onClick={() => includedRemove(index)}
-                    type="button"
-                    variant="link"
-                    size="icon"
-                    className="cursor-pointer "
-                  >
-                    <Trash />
-                  </Button>
+                  {tourPlanFields.map((item, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between gap-2 mt-2"
+                    >
+                      <FormField
+                        control={form.control}
+                        name={`tourPlan.${index}.value`}
+                        key={item.id}
+                        render={({ field }) => (
+                          <FormItem className="w-full">
+                            <FormControl>
+                              <Input
+                                placeholder="eg. Day-1: Hiking on the hill!"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button
+                        onClick={() => tourPlanRemove(index)}
+                        type="button"
+                        variant="link"
+                        size="icon"
+                        className="cursor-pointer"
+                      >
+                        <Trash />
+                      </Button>
+                    </div>
+                  ))}
                 </div>
-              ))}
 
-              {/* Multifield Input -Exluded */}
-              <div className="border-t border-slate-700 w-full"></div>
-              <div className="flex justify-between">
-                <p className="">Exluded</p>
-                <Button
-                  type="button"
-                  size="icon"
-                  onClick={() => excludedAppend({ value: "" })}
-                  className="cursor-pointer bg-muted-foreground "
-                >
-                  <Plus />
-                </Button>
+                {/* Multifield Input - Amenities */}
+                <div className="w-full">
+                  <div className="flex justify-between">
+                    <p className="">Amenities</p>
+                    <Button
+                      type="button"
+                      size="icon"
+                      onClick={() => amenitiesAppend({ value: "" })}
+                      className="cursor-pointer bg-muted-foreground"
+                    >
+                      <Plus />
+                    </Button>
+                  </div>
+
+                  {amenitiesFields.map((item, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between gap-2 mt-2"
+                    >
+                      <FormField
+                        control={form.control}
+                        name={`amenities.${index}.value`}
+                        key={item.id}
+                        render={({ field }) => (
+                          <FormItem className="w-full">
+                            <FormControl>
+                              <Input
+                                placeholder="eg. Air-conditioned hotel room"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button
+                        onClick={() => amenitiesRemove(index)}
+                        type="button"
+                        variant="link"
+                        size="icon"
+                        className="cursor-pointer"
+                      >
+                        <Trash />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </div>
-
-              {excludedFields.map((item, index) => (
-                <div key={index} className="flex justify-between gap-2 mt-1 ">
-                  <FormField
-                    control={form.control}
-                    name={`excluded.${index}.value`}
-                    key={item.id}
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        {/* <FormLabel>{index + 1}</FormLabel> */}
-                        <FormControl>
-                          <Input placeholder="eg. Subsidize meal" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <Button
-                    onClick={() => excludedRemove(index)}
-                    type="button"
-                    variant="link"
-                    size="icon"
-                    className="cursor-pointer "
-                  >
-                    <Trash />
-                  </Button>
-                </div>
-              ))}
-
-              {/* Multifield Input - Add tour plan */}
-              <div className="border-t border-slate-700 w-full"></div>
-              <div className="flex justify-between">
-                <p className="">Add Tour plan</p>
-                <Button
-                  type="button"
-                  size="icon"
-                  onClick={() => tourPlanAppend({ value: "" })}
-                  className="cursor-pointer bg-muted-foreground "
-                >
-                  <Plus />
-                </Button>
-              </div>
-
-              {tourPlanFields.map((item, index) => (
-                <div key={index} className="flex justify-between gap-2 mt-1 ">
-                  <FormField
-                    control={form.control}
-                    name={`tourPlan.${index}.value`}
-                    key={item.id}
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        {/* <FormLabel>{index + 1}</FormLabel> */}
-                        <FormControl>
-                          <Input
-                            placeholder="eg. Day-1: Hiking on the heal!"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <Button
-                    onClick={() => tourPlanRemove(index)}
-                    type="button"
-                    variant="link"
-                    size="icon"
-                    className="cursor-pointer "
-                  >
-                    <Trash />
-                  </Button>
-                </div>
-              ))}
-
-              {/* Multifield Input - Add tour plan */}
-              <div className="border-t border-slate-700 w-full"></div>
-              <div className="flex justify-between">
-                <p className="">Amenities</p>
-                <Button
-                  type="button"
-                  size="icon"
-                  onClick={() => amenitiesAppend({ value: "" })}
-                  className="cursor-pointer bg-muted-foreground "
-                >
-                  <Plus />
-                </Button>
-              </div>
-
-              {amenitiesFields.map((item, index) => (
-                <div key={index} className="flex justify-between gap-2 mt-1 ">
-                  <FormField
-                    control={form.control}
-                    name={`amenities.${index}.value`}
-                    key={item.id}
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        {/* <FormLabel>{index + 1}</FormLabel> */}
-                        <FormControl>
-                          <Input
-                            placeholder="eg. Air conditions Hotel room"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <Button
-                    onClick={() => amenitiesRemove(index)}
-                    type="button"
-                    variant="link"
-                    size="icon"
-                    className="cursor-pointer "
-                  >
-                    <Trash />
-                  </Button>
-                </div>
-              ))}
             </div>
 
             {isLoading ? (
