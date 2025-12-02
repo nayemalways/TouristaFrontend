@@ -4,14 +4,10 @@ import {z} from "zod";
 export const loginSchema = z.object({
   email: z.email(),
   password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 length" })
-    .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/, {
+    .string({
       message: "Password must be 1 uppercase, special, 1 number!",
-    }),
+    })
 });
-
-
 
 
 // Signup Schema
