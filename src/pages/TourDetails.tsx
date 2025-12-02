@@ -8,6 +8,7 @@ import { useBookTourMutation } from "@/redux/features/payment/payment.api";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useGetMeQuery } from "@/redux/features/auth/auth.api";
+import { Spinner } from "@/components/ui/spinner";
 
 const formatTourDate = (start: string, end: string) => {
   const options: Intl.DateTimeFormatOptions = {
@@ -20,40 +21,40 @@ const formatTourDate = (start: string, end: string) => {
 };
 
 const TourDetails = () => {
-const [guest, setGuest] = useState(1);
+  const [guest, setGuest] = useState(1);
   const { tourId } = useParams();
   const { data } = useGetTourByIdQuery(tourId);
   const navigate = useNavigate();
   const tour = data;
 
-  const [bookTour, {isLoading}] = useBookTourMutation();
-  const { data: userData, isLoading: userDataLoading } = useGetMeQuery(undefined);
+  const [bookTour, { isLoading }] = useBookTourMutation();
+  const { data: userData, isLoading: userDataLoading } =
+    useGetMeQuery(undefined);
 
   const handleCheckout = async () => {
-
-    if(!userData && !userDataLoading) {
-      navigate('/login');
+    if (!userData && !userDataLoading) {
+      navigate("/login");
       return;
     }
 
     try {
-        const res = await bookTour({
+      const res = await bookTour({
         guestCount: guest,
-        tour: tourId
-    }).unwrap();
+        tour: tourId,
+      }).unwrap();
 
-    console.log(res.success)
+      console.log(res.success);
 
-    if(res.success) {
-        navigate('/tour/checkout', {
-            state: res.data
-        })
-    } 
+      if (res.success) {
+        navigate("/tour/checkout", {
+          state: res.data,
+        });
+      }
     } catch (error: any) {
-        toast.error(error.data.message);
-        console.log(error)
+      toast.error(error.data.message);
+      console.log(error);
     }
-  }
+  };
 
   if (!tour) return <p className="text-center py-10">Loading...</p>;
 
@@ -95,12 +96,24 @@ const [guest, setGuest] = useState(1);
 
             <p className="text-gray-700 mb-6">{tour.description}</p>
             <p className="text-gray-700 mb-6">
-            Add Guest: <CounterButton defaultValue={guest} onChange={(value) => setGuest(value)} max={tour.maxGuest} />
+              Add Guest:{" "}
+              <CounterButton
+                defaultValue={guest}
+                onChange={(value) => setGuest(value)}
+                max={tour.maxGuest}
+              />
             </p>
 
-            <Button onClick={handleCheckout} className="bg-orange-600 cursor-pointer text-white px-6 py-3 rounded-md hover:bg-orange-700">
-              Book Now
-            </Button>
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <Button
+                onClick={handleCheckout}
+                className="bg-orange-600 cursor-pointer text-white px-6 py-3 rounded-md hover:bg-orange-700"
+              >
+                Book Now
+              </Button>
+            )}
 
             {/* Separator */}
             <hr className="my-8" />

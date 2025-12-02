@@ -15,8 +15,8 @@ export default function Checkout() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 my-10 bg-white shadow-lg rounded-xl border">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">
+    <div className="max-w-4xl mx-auto p-6 my-10  shadow-lg rounded-xl border">
+      <h2 className="text-3xl font-bold text-balck dark:text-white mb-6">
         Checkout – Complete Your Booking
       </h2>
 
@@ -24,7 +24,7 @@ export default function Checkout() {
       <div className="grid md:grid-cols-2 gap-6">
         {/* User Details */}
         <div className="border rounded-lg p-5">
-          <h3 className="text-xl font-semibold text-gray-700 mb-3">
+          <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-3">
             Traveler Information
           </h3>
           <p>
@@ -43,7 +43,7 @@ export default function Checkout() {
 
         {/* Tour Details */}
         <div className="border rounded-lg p-5">
-          <h3 className="text-xl font-semibold text-gray-700 mb-3">
+          <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-3">
             Tour Details
           </h3>
           <p>
@@ -67,7 +67,7 @@ export default function Checkout() {
 
       {/* Payment Info */}
       <div className="mt-8 p-5 border rounded-lg">
-        <h3 className="text-xl font-semibold text-gray-700 mb-3">
+        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-3">
           Payment Summary
         </h3>
         <div className="flex justify-between text-lg">
