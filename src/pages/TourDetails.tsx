@@ -43,8 +43,6 @@ const TourDetails = () => {
         tour: tourId,
       }).unwrap();
 
-      console.log(res.success);
-
       if (res.success) {
         navigate("/tour/checkout", {
           state: res.data,
@@ -59,7 +57,7 @@ const TourDetails = () => {
   if (!tour) return <p className="text-center py-10">Loading...</p>;
 
   return (
-    <div className="bg-gray-100">
+    <div className=" ">
       <div className="container mx-auto px-4 py-10">
         {/* Main Layout */}
         <div className="flex flex-wrap -mx-4">
@@ -91,11 +89,11 @@ const TourDetails = () => {
               <span className="text-3xl font-bold text-primary">
                 ৳ {tour.costFrom}
               </span>
-              <span className="text-gray-500 ml-2">/ per person</span>
+              <span className="text-gray-400 ml-2">/ per person</span>
             </div>
 
-            <p className="text-gray-700 mb-6">{tour.description}</p>
-            <p className="text-gray-700 mb-6">
+            <p className="text-gray-700 mb-6 dark:text-gray-300">{tour.description}</p>
+            <p className="text-gray-700 mb-6 dark:text-gray-300">
               Add Guest:{" "}
               <CounterButton
                 defaultValue={guest}
@@ -123,7 +121,7 @@ const TourDetails = () => {
               {/* Included */}
               <div>
                 <h3 className="text-xl font-semibold mb-2">Included</h3>
-                <ul className="list-disc list-inside text-gray-700">
+                <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
                   {tour.included.map((item: string, i: number) => (
                     <li key={i}>{item}</li>
                   ))}
@@ -133,7 +131,7 @@ const TourDetails = () => {
               {/* Excluded */}
               <div>
                 <h3 className="text-xl font-semibold mb-2">Excluded</h3>
-                <ul className="list-disc list-inside text-gray-700">
+                <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
                   {tour.excluded.map((item: string, i: number) => (
                     <li key={i}>{item}</li>
                   ))}
@@ -144,7 +142,7 @@ const TourDetails = () => {
             {/* Amenities */}
             <div className="mt-8">
               <h3 className="text-xl font-semibold mb-2">Amenities</h3>
-              <ul className="list-disc list-inside text-gray-700">
+              <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
                 {tour.amenities.map((item: string, i: number) => (
                   <li key={i}>{item}</li>
                 ))}
@@ -154,11 +152,11 @@ const TourDetails = () => {
         </div>
 
         {/* ------- TOUR PLAN ------- */}
-        <div className="bg-white p-6 rounded-lg shadow mt-10">
+        <div className="p-6 rounded-lg shadow mt-10">
           <h3 className="text-2xl font-semibold mb-4">Tour Plan</h3>
-          <ul className="space-y-3 text-gray-700">
+          <ul className="space-y-3 text-gray-700 dark:text-gray-300">
             {tour.tourPlan.map((plan: string, i: number) => (
-              <li key={i} className="p-3 bg-gray-50 rounded border">
+              <li key={i} className="p-3 rounded border">
                 {plan}
               </li>
             ))}

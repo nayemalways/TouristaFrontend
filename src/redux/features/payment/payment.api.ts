@@ -9,15 +9,13 @@ const paymentApi = baseApi.injectEndpoints({
         data: tourInfo
       }),
     }),
-     getTours: builder.query({
-      query: () => ({
-        url: "/tour",
-        method: "GET",
+     getInvoice: builder.query({
+      query: (transacetion_id) => ({
+        url: `/payment/invoice?transection_id=${transacetion_id}`,
+        method: "GET"
       }),
-      providesTags: ["TOUR"],
-      transformResponse: (response) => response.data,
     })
   }),
 });
 
-export const { useBookTourMutation , useGetToursQuery} = paymentApi;
+export const { useBookTourMutation , useGetInvoiceQuery} = paymentApi;

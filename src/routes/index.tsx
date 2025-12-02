@@ -14,6 +14,9 @@ import { role } from "@/constants/role";
 import Home from "@/pages/Home";
 import TourDetails from "@/pages/TourDetails";
 import Checkout from "@/pages/Tour/Checkout";
+import PaymentSuccess from "@/pages/payment/PaymentSuccess";
+import PaymentFailed from "@/pages/payment/PaymentFailed";
+import PaymentCancel from "@/pages/payment/PaymentCancel";
 
 const router = createBrowserRouter([
     {
@@ -35,6 +38,18 @@ const router = createBrowserRouter([
             {
                 path: `tour/checkout`,
                 Component: Checkout
+            },
+            {
+                path: `payment_success`,
+                Component: PaymentSuccess
+            },
+            {
+                path: `payment_fail`,
+                Component: PaymentFailed
+            },
+            {
+                path: `payment_cancelled`,
+                Component: PaymentCancel
             }
         ]
     },

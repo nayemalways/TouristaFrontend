@@ -111,8 +111,6 @@ function AddTour() {
       amenities: values?.excluded.map((item: { value: string }) => item.value),
     };
 
-    console.log(tourPayload);
-
     const formdata = new FormData();
     formdata.append("data", JSON.stringify(tourPayload));
     images.map((image) => formdata.append("files", image as File));
