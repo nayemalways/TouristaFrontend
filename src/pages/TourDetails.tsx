@@ -9,6 +9,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useGetMeQuery } from "@/redux/features/auth/auth.api";
 import { Spinner } from "@/components/ui/spinner";
+import TourDetailsSkeleton from "@/components/skeleton/TourDetailsSkeleton";
 
 const formatTourDate = (start: string, end: string) => {
   const options: Intl.DateTimeFormatOptions = {
@@ -54,10 +55,10 @@ const TourDetails = () => {
     }
   };
 
-  if (!tour) return <p className="text-center py-10">Loading...</p>;
+  if (!tour) return <TourDetailsSkeleton/>
 
   return (
-    <div className=" ">
+    <div>
       <div className="container mx-auto px-4 py-10">
         {/* Main Layout */}
         <div className="flex flex-wrap -mx-4">

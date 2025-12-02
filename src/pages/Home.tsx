@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import TourSkeletonList from "@/components/skeleton/TourCardSkeleton";
 import { Button } from "@/components/ui/button";
 import { useGetToursQuery } from "@/redux/features/tour/tour.api";
 import { formatShortDate } from "@/utils/dateFormatter";
 import { Link } from "react-router";
 
 const Home = () => {
-  const { data } = useGetToursQuery(undefined);
+  const { data, isLoading } = useGetToursQuery(undefined);
 
   return (
     <div className="w-full min-h-screen py-10">
@@ -15,7 +16,7 @@ const Home = () => {
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {data &&
+          { isLoading ? <TourSkeletonList/> : 
             data?.map((tour: any, i: number) => (
               <Link key={i} to={`/tour/${tour?._id}`}>
                 <div
@@ -84,6 +85,7 @@ const Home = () => {
                 </div>
               </Link>
             ))}
+          
         </div>
       </div>
     </div>
