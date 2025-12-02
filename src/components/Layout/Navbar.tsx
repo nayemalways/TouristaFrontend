@@ -104,30 +104,23 @@ export default function Navbar() {
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
-                {navigationLinks.map((link, index) => (
-                  <>
-                    {link.role === "PUBLIC" && 
-                      <NavigationMenuItem key={index}>
-                        <NavigationMenuLink
-                          asChild
-                          className="py-1.5 font-medium text-muted-foreground hover:text-primary"
-                        >
-                          <Link to={link.href}>{link.label}</Link>
-                        </NavigationMenuLink>
-                      </NavigationMenuItem>
-                    }
-                    {link.role === data?.data?.role && 
-                      <NavigationMenuItem key={index}>
-                        <NavigationMenuLink
-                          asChild
-                          className="py-1.5 font-medium text-muted-foreground hover:text-primary"
-                        >
-                          <Link to={link.href}>{link.label}</Link>
-                        </NavigationMenuLink>
-                      </NavigationMenuItem>
-                    }
-                  </>
-                ))}
+                {navigationLinks.map((link) => {
+                  const canView =
+                    link.role === "PUBLIC" || link.role === data?.data?.role;
+
+                  if (!canView) return null; // skip links user can't see
+
+                  return (
+                    <NavigationMenuItem key={link.href}>
+                      <NavigationMenuLink
+                        asChild
+                        className="py-1.5 font-medium text-muted-foreground hover:text-primary"
+                      >
+                        <Link to={link.href}>{link.label}</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  );
+                })}
               </NavigationMenuList>
             </NavigationMenu>
           </div>

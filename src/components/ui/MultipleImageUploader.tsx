@@ -7,8 +7,8 @@ import { useEffect, type Dispatch } from "react"
 
 
 export default function MultipleImageUploader({onChange, value} : {onChange:  Dispatch<React.SetStateAction<[] | (File | FileMetadata)[]>>, value: (File | FileMetadata)[]}) {
-  const maxSizeMB = 5
-  const maxSize = maxSizeMB * 1024 * 1024 // 5MB default
+  const maxSizeMB = 20
+  const maxSize = maxSizeMB * 1024 * 1024 // 20MB default
   const maxFiles = 6
 
   const [
