@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperType } from "swiper";
 
 // Swiper modules
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/navigation";
+import "swiper/swiper.css";
+
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 
 export default function ImageSlider({ images }: {images: string[]}) {
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
   return (
     <div className="w-full">
